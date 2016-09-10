@@ -6,11 +6,13 @@ const char* getSQLiteDBName() {
 	return SQLITE_DB_NAME;
 }
 
-char* error_msgs[4] = {
+char* error_msgs[6] = {
 	"Allowable request content length exceeded",
 	"Bad request, missing username/password specification",
 	"Registration failed. User name already exists",
-	"Unknown exception/error in persistence access"
+	"Unknown exception/error in persistence access",
+	"Bad request, missing/invalid stock code for quote",
+	"Bad request, Invalid credentials passed"
 };
 
 void configLogger(Wt::WLogger& logger) {

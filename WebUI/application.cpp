@@ -13,6 +13,9 @@
 #include <iostream>
 
 #include "../REST_Impl/Registration.h"
+#include "../REST_Impl/Quote.h"
+#include "../REST_Impl/Transactions.h"
+#include "../REST_Impl/PortfolioList.h"
 
 #include <functional>
 #include "application.h"
@@ -76,8 +79,18 @@ int ui_landing(int argc, char **argv) {
 		WServer server(argv[0], "");
 		try {
 			server.setServerConfiguration(argc, argv);
+			
 			Registration dr;
-			server.addResource(&dr, "/register");
+			server.addResource(&dr, "/RegisterTrader");
+
+			Quote qu;
+			server.addResource(&qu, "/Quote");
+
+			Transactions tx;
+			server.addResource(&tx, "/Transactions");
+
+			PortfolioList pf;
+			server.addResource(&pf, "/PortfolioList");
 
 			server.addEntryPoint(Wt::Application, createApplication);
 

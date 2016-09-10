@@ -1,22 +1,24 @@
 #include <iostream>
 #include <vector>
+#include <tuple>
+
 #include <cpprest/json.h>
 
 #include <Wt/Http/Response>
-#include "Registration.h"
+#include "Quote.h"
 #include "../common/CommonUtils.h"
 #include "../Controller/CommonController.h"
 #include "../Controller/OperationStatus.h"
 
 using namespace Wt::Http;
 
-Registration::Registration() {
+Quote::Quote() {
 }
 
-Registration::~Registration() {
+Quote::~Quote() {
 }
 
-void Registration::handleRequest(const Request& request, Response& response) {
+void Quote::handleRequest(const Request& request, Response& response) {
 	int contentLength = request.contentLength();
 	if (contentLength > MAX_CONTENT_LENGTH) {
 		return_bad_request(response, content_length_exceeded);
@@ -43,9 +45,21 @@ void Registration::handleRequest(const Request& request, Response& response) {
 		return;
 	}
     
+	auto stockIter = inputs.find("stockcode");
+	if (stockIter == inputs.end()) {
+		return_bad_request(response, bad_request_stockcode);
+		return;
+	}
+	std::vector<std::string> stockVec = stockIter->second;
+	if (stockVec.size() != 1 || stockVec[0].length() < 1) {
+		return_bad_request(response, bad_request_stockcode);
+		return;
+	}
 	CommonController ctrl;
-    OperationStatus op_stat = ctrl.registerNewTrader(userVec[0], passVec[0]);
+    std::tuple<OperationStatus, int> op_result = ctrl.getQuote(userVec[0], passVec[0], stockVec[0]);
 	
+	const OperationStatus& op_stat = std::get<0>(op_result);
+
 	if(op_stat.failed()){
 		return_bad_request_Exc(response, op_stat.get_error_code(), op_stat.get_exception_msg());
 		return;
@@ -54,8 +68,8 @@ void Registration::handleRequest(const Request& request, Response& response) {
 	response.setMimeType("application/json");
 
 	web::json::value resp_json;
-	resp_json[L"trader"] = web::json::value::string(utility::conversions::to_string_t(userVec[0]));
-	resp_json[L"balance"] = web::json::value(INITIAL_BALANCE);
+	resp_json[L"stockcode"] = web::json::value::string(utility::conversions::to_string_t(stockVec[0]));
+	resp_json[L"lastsaleprice"] = web::json::value(std::get<1>(op_result) );
 	resp_json[L"status"] = web::json::value::string(U("Success"));
 	
 	utility::stringstream_t stream;

@@ -41,3 +41,37 @@ bool Trader::registerTrader() {
 		return false;
 	}
 }
+
+bool Trader::verifyCredentials() {
+	try {
+		Wt::Dbo::backend::Sqlite3 sl(getSQLiteDBName());
+		Wt::Dbo::Session session;
+		session.setConnection(sl);
+
+		session.mapClass<Trader>("trader");
+		Wt::Dbo::Transaction trx(session);
+
+		int count = session.query<int>("select count(1) from trader").where("username=? and password=?").bind(name).bind(pass);
+		if(count == 0){
+			msg = "Bad credentials";
+			m_ec = invalid_credentials;
+			trx.commit();
+			return false;
+		}
+		else {
+			msg = "Found match";
+			trx.commit();
+			return true;
+		}
+	}
+	catch (std::exception& e) {
+		msg = e.what();
+		m_ec = unknown_error;
+		return false;
+	}
+	catch (...) {
+		msg = "Unknown error";
+		m_ec = unknown_error;
+		return false;
+	}
+}

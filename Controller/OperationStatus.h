@@ -10,15 +10,15 @@ class OperationStatus{
 	std::string m_exception_msg;
 	public:
 		OperationStatus();
-		bool failed();
+		bool failed() const;
 		void set_error(const std::string& msg, err_code ec) {
 			m_exception_msg = msg;
 			m_err_code = ec;
 		};
 
-		err_code get_error_code();
+		err_code get_error_code() const;
 
-		std::string get_exception_msg() {
+		std::string get_exception_msg() const{
 			return m_exception_msg;
 		}
 		void set_status(bool stat) {

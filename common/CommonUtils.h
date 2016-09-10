@@ -12,7 +12,9 @@ enum err_code {
 	content_length_exceeded = 0,
 	bad_request_upass,
 	user_already_exists,
-	unknown_error
+	unknown_error,
+	bad_request_stockcode,
+	invalid_credentials
 };
 
 void configLogger(Wt::WLogger& logger);

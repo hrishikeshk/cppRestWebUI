@@ -25,6 +25,8 @@ public:
 
 	bool registerTrader();
 
+	bool verifyCredentials();
+
 	std::string& getMsg() {
 		return msg;
 	}
