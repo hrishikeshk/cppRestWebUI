@@ -6,15 +6,24 @@ The software contained with this package implements,
 1.A Rest API for serving typical requests around stock markets.
 2.A Web UI that consumes the API.
 
+The source includes a visual studio project (within 'cppRestWebUI')along with the C++ files. However, additional installations
+as well as configurations are still required to use the project.
 
 Environment, Install instructions, Dependencies:
 -----------------------------------------------
 
 This package is developed using these third party libraries,
 1. Microsoft Visual Studio Community 2015
-2. Wt 3.3.6 (https://www.webtoolkit.eu/wt)
-3. Casablanca C++ REST SDK 1.4.0 (https://github.com/Microsoft/cpprestsdk)
+2. Wt 3.3.6 (https://www.webtoolkit.eu/wt). 
+		Download and install the Windows binary listed and as per the target being 32/64 bit OS.
+		Note the paths to 'Wt' include', 'bin' and 'lib' directories for later use.
+3. Casablanca C++ REST SDK 2.8.0 (https://github.com/Microsoft/cpprestsdk). 
+		Use the Tools->NuGet package manager->Manage packages for Solution within Visual Studio 2015 to first search 
+		for 'casablanca C++ REST SDK' and then find version 2.8.0 by casablancacore and install it for the project.
 4. Sqlite 3.14 (www.sqlite.org)
+		This should comprise of amalgamation of exactly two files - one header (.h) and one source (.cpp).
+		These source files should be added to the project as source to be build along with the application itself.
+		Secondly, also download command line utilities/.exe for running database scripts.
 
 Database initializer script:
 ---------------------------
@@ -27,7 +36,8 @@ As a pre-requisite,
 
 		type DBScript.sql | sqlite3.exe Market.db
 
-4. Copy the generated file 'Market.db' to the Visual studio project directory (alongside 'cppRestWebUI.vcxproj').
+4. Copy the generated file 'Market.db' to the Visual studio project directory (alongside '.vcxproj' file so that the application
+	finds it in the current directory).
 
 Configuration and preparing source:
 ----------------------------------
@@ -44,14 +54,17 @@ at least the following stepswere needed above the code to make the build and exe
 	c.  - C/C++ - general - add the 'Wt' include directory to the additional include paths.
 	d.  - C/C++ - Preprocessor - 'WIN32' should be present in the preprocessor definitions.
 	e.  - C/C++ - advanced - add '4996' to - disable specific warnings (required for Wt).
-	d.  - Linker - Input - Additional Dependencies - add these library objects for linking with Wt if the project is a debug build,
+	f.  - Linker - general - In the additional library directories, add path to the 'Wt' lib folder
+	g.  - Linker - Input - Additional Dependencies - add these library objects for linking with Wt if the project is a debug build,
 					wtd.lib, wthttpd.lib, wtdbod.lib, wtdbosqlite3d.lib, libboost_unit_test_framework-vc140-mt-gd-1_59.lib
 					If the project is not a 'Debug' build then add these,
-					wt.lib, wthttp.lib, wtdbo.lib, wtdbosqlite3.lib, libboost_unit_test_framework-vc140-mt-1_59.lib
+					wt.lib, wthttp.lib, wtdbo.lib, wtdbosqlite3.lib, 
+					libboost_unit_test_framework-vc140-mt-gd-1_59.lib
 
-4.  Use NuGet to fetch and install casablanca C++ REST SDK 1.4.0.
+4.  Use NuGet to fetch and install casablanca C++ REST SDK 2.8.0.
 5.  The build nevertheless shows several warnings from 'Wt' but without any errors and ready.
-
+6. Build and run source. It should start up a server listening to port specified (8080) and accessible 
+    using a browser on the loopback address (127.0.0.1).
 
 Assumptions and missing requirements:
 ------------------------------------
@@ -75,5 +88,5 @@ to sort them out before development and design. I could make some assumptions to
 than expected.
 
 
-* Above all, it was an interesting project for me to do and I am happy to have spent time on it and eager for feedback.
+* Above all, it was an interesting project for me to do and am eager for feedback.
 #########################################

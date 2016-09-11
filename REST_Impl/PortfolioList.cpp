@@ -73,7 +73,7 @@ void PortfolioList::handleRequest(const Request& request, Response& response) {
 	}
 	
 	resp_json[L"PortfolioList"] = pf_array;
-	resp_json[L"status"] = web::json::value::string(U("Success"));
+	resp_json[L"status"] = web::json::value::string(U("SUCCESS"));
 	resp_json[L"Trader"] = web::json::value::string(utility::conversions::to_string_t(userVec[0]));
 
 	utility::stringstream_t stream;

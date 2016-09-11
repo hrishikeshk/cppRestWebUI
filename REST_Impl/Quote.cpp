@@ -70,7 +70,7 @@ void Quote::handleRequest(const Request& request, Response& response) {
 	web::json::value resp_json;
 	resp_json[L"stockcode"] = web::json::value::string(utility::conversions::to_string_t(stockVec[0]));
 	resp_json[L"lastsaleprice"] = web::json::value(std::get<1>(op_result) );
-	resp_json[L"status"] = web::json::value::string(U("Success"));
+	resp_json[L"status"] = web::json::value::string(U("SUCCESS"));
 	
 	utility::stringstream_t stream;
     resp_json.serialize(stream);

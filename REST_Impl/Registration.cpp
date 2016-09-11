@@ -56,7 +56,7 @@ void Registration::handleRequest(const Request& request, Response& response) {
 	web::json::value resp_json;
 	resp_json[L"trader"] = web::json::value::string(utility::conversions::to_string_t(userVec[0]));
 	resp_json[L"balance"] = web::json::value(INITIAL_BALANCE);
-	resp_json[L"status"] = web::json::value::string(U("Success"));
+	resp_json[L"status"] = web::json::value::string(U("SUCCESS"));
 	
 	utility::stringstream_t stream;
     resp_json.serialize(stream);
