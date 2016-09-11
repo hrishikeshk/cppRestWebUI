@@ -17,7 +17,7 @@ bool Trader::registerTrader() {
 		int count = session.query<int>("select count(1) from trader").where("username=?").bind(name);
 
 		if (count == 0) {
-			Trader* tr2 = new Trader(name, pass, 100000);
+			Trader* tr2 = new Trader(name, pass, INITIAL_BALANCE);
 			Wt::Dbo::ptr<Trader> traderPtr = session.add(tr2);
 			trx.commit();
 			msg = "Successfully registered new user";

@@ -14,7 +14,9 @@ public:
 	Stock():code("Dummy"), lastSalePrice(-1) {
 	}
 	Stock(const std::string& c, int p);
-
+	std::string getCode()const {
+		return code;
+	}
 	template<class Action>
 	void persist(Action& a) {
 		Wt::Dbo::field(a, code, "stockcode");
@@ -33,8 +35,11 @@ public:
 	err_code getErrorCode() {
 		return m_ec;
 	}
+	void setLastSalePrice(int new_price) {
+		lastSalePrice = new_price;
+	}
 };
-
+/*
 namespace Wt {
 	namespace Dbo {
 		template<>
@@ -45,5 +50,5 @@ namespace Wt {
 		};
 	}
 }
-
+*/
 #endif

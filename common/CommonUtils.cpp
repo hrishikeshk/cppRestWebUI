@@ -6,13 +6,17 @@ const char* getSQLiteDBName() {
 	return SQLITE_DB_NAME;
 }
 
-char* error_msgs[6] = {
+char* error_msgs[10] = {
 	"Allowable request content length exceeded",
 	"Bad request, missing username/password specification",
 	"Registration failed. User name already exists",
 	"Unknown exception/error in persistence access",
 	"Bad request, missing/invalid stock code for quote",
-	"Bad request, Invalid credentials passed"
+	"Bad request, Invalid credentials passed",
+	"Bad request, in specifying quantity",
+	"Bad request, in specifying price",
+	"Bad request, balance cash not sufficient for the buy transaction",
+	"Bad request, portfolio does not have sufficient quantity of stock"
 };
 
 void configLogger(Wt::WLogger& logger) {
@@ -45,5 +49,5 @@ void return_bad_request_Exc(Wt::Http::Response& resp, err_code ec, const std::st
 
 	resp.setMimeType("application/json");
 	std::ostream& out = resp.out();
-	out << "{'status': 'Failure', 'reason': '" << error_msgs[ec] << "'}" << std::endl;
+	out << "{'status': 'FAILURE', 'reason': '" << error_msgs[ec] << "'}" << std::endl;
 }

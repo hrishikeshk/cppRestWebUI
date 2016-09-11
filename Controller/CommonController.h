@@ -21,6 +21,12 @@ public:
 
 	std::tuple<OperationStatus, std::vector<std::tuple<std::string, int, int, double > > >
 		getPortfolio(const std::string& user, const std::string& pass) const;
+
+	std::tuple<OperationStatus, std::tuple<int, std::string, std::string > >
+		buy(const std::string& user, const std::string& pass, const std::string& stockcode, int qty, int offer_price) const;
+
+	std::tuple<OperationStatus, std::tuple<int, std::string, std::string > >
+		sell(const std::string& user, const std::string& pass, const std::string& stockcode, int qty, int offer_price) const;
 };
 
 #endif

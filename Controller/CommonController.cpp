@@ -3,6 +3,8 @@
 #include "../Persistence/Stock.h"
 #include "../Persistence/Stock_Transaction.h"
 #include "../Persistence/Portfolio.h"
+#include "../Persistence/BuyPersistence.h"
+#include "../Persistence/SellPersistence.h"
 
 //#include <ppltasks.h>
 //#include <array>
@@ -132,5 +134,45 @@ CommonController::getPortfolio(const std::string& user, const std::string& pass)
 		op_stat.set_status(1);
 		std::vector<std::tuple<std::string, int, int, double > > retVec;
 		return std::make_tuple(op_stat, retVec);
+	}
+}
+
+std::tuple<OperationStatus, std::tuple<int, std::string, std::string > >
+CommonController::buy(const std::string& user, const std::string& pass, const std::string& stockcode, int qty, int offer_price) const {
+	OperationStatus op_stat;
+	std::tuple<int, std::string, std::string > retTup;
+	int creds_valid = areValidCredentials(user, pass, op_stat);
+	if (creds_valid == 1) {
+		BuyPersistence bp(user, stockcode, qty, offer_price);
+		op_stat.set_status(!bp.buy(retTup));
+		if (op_stat.failed()) {
+			op_stat.set_error(bp.getMsg(), bp.getErrorCode());
+			return std::make_tuple(op_stat, retTup);
+		}
+		return std::make_tuple(op_stat, retTup);
+	}
+	else {
+		op_stat.set_status(1);
+		return std::make_tuple(op_stat, retTup);
+	}
+}
+
+std::tuple<OperationStatus, std::tuple<int, std::string, std::string > >
+CommonController::sell(const std::string& user, const std::string& pass, const std::string& stockcode, int qty, int offer_price) const {
+	OperationStatus op_stat;
+	std::tuple<int, std::string, std::string > retTup;
+	int creds_valid = areValidCredentials(user, pass, op_stat);
+	if (creds_valid == 1) {
+		SellPersistence sp(user, stockcode, qty, offer_price);
+		op_stat.set_status(!sp.sell(retTup));
+		if (op_stat.failed()) {
+			op_stat.set_error(sp.getMsg(), sp.getErrorCode());
+			return std::make_tuple(op_stat, retTup);
+		}
+		return std::make_tuple(op_stat, retTup);
+	}
+	else {
+		op_stat.set_status(1);
+		return std::make_tuple(op_stat, retTup);
 	}
 }

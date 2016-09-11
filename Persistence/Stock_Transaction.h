@@ -18,6 +18,10 @@ public:
 	}
 	Stock_Transaction(const std::string& u);
 
+	Stock_Transaction(const std::string& u, const std::string& c, int q, int dt, const std::string& st):
+					user(u), code(c), quantity(q), datetime(dt), status(st){
+
+	}
 	template<class Action>
 	void persist(Action& a) {
 		Wt::Dbo::field(a, user, "username");
@@ -36,7 +40,7 @@ public:
 		return m_ec;
 	}
 };
-
+/*
 namespace Wt {
 	namespace Dbo {
 		template<>
@@ -47,5 +51,5 @@ namespace Wt {
 		};
 	}
 }
-
+*/
 #endif

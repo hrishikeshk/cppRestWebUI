@@ -14,7 +14,11 @@ enum err_code {
 	user_already_exists,
 	unknown_error,
 	bad_request_stockcode,
-	invalid_credentials
+	invalid_credentials,
+	bad_request_quantity,
+	bad_request_price,
+	insufficient_funds_balance,
+	insufficient_portfolio
 };
 
 void configLogger(Wt::WLogger& logger);

@@ -23,6 +23,13 @@ public:
 		Wt::Dbo::field(a, balance, "balancecash");
 	};
 
+	int getBalance() const {
+		return balance;
+	}
+	void setBalance(int new_balance) {
+		balance = new_balance;
+	}
+
 	bool registerTrader();
 
 	bool verifyCredentials();
@@ -34,7 +41,7 @@ public:
 		return m_ec;
 	}
 };
-
+/*
 namespace Wt {
 	namespace Dbo {
 		template<>
@@ -45,5 +52,6 @@ namespace Wt {
 		};
 	}
 }
+*/
 
 #endif

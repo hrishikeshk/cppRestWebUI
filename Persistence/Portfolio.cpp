@@ -7,6 +7,18 @@
 Portfolio::Portfolio(const std::string& u):user(u), code("Dummy"), quantity(0), totalcost(0), msg("") {
 }
 
+std::map<std::string, int> Portfolio::getAllStocks(Wt::Dbo::Session& session) const {
+	std::map<std::string, int> retMap;
+	Wt::Dbo::collection<Wt::Dbo::ptr<Stock> > matchingStocks = session.find<Stock>();
+	for (Wt::Dbo::collection<Wt::Dbo::ptr<Stock> >::const_iterator i = matchingStocks.begin();
+		i != matchingStocks.end(); ++i
+		) {
+
+		retMap[(*i)->getCode()] = (*i)->result();
+	}
+	return retMap;
+}
+
 bool Portfolio::fetchPortfolioForUser(std::vector<std::tuple<std::string, int, int, double > >& vecResult) {
 	try {
 		Wt::Dbo::backend::Sqlite3 sl(getSQLiteDBName());
@@ -16,13 +28,19 @@ bool Portfolio::fetchPortfolioForUser(std::vector<std::tuple<std::string, int, i
 		session.mapClass<Portfolio>("portfolio");
 		session.mapClass<Stock>("stock");
 		Wt::Dbo::Transaction trx(session);
-		bool status_flag;
+		
+		auto stockMap = getAllStocks(session);
+
 		Wt::Dbo::collection<Wt::Dbo::ptr<Portfolio> > matchingPfes = session.find<Portfolio>().where("username=?").bind(user);
 		for (Wt::Dbo::collection<Wt::Dbo::ptr<Portfolio> >::const_iterator i = matchingPfes.begin();
 			  i != matchingPfes.end(); ++i
 			) {
-			Wt::Dbo::ptr<Stock> oneStock = session.find<Stock>().where("stockcode=?").bind((*i)->code);
-			vecResult.emplace_back((*i)->code, (*i)->quantity, (*i)->totalcost, ((*i)->quantity) * oneStock->result());
+			auto stockIter = stockMap.find((*i)->code);
+			int lastSP = 0;
+			if (stockIter != stockMap.end()) {
+				lastSP = stockIter->second;
+			}
+			vecResult.emplace_back((*i)->code, (*i)->quantity, (*i)->totalcost, ((*i)->quantity) * lastSP);
 		}
 
 		msg = "Retrieved matching portfolio entries";

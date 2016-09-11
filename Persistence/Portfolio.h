@@ -2,6 +2,7 @@
 #define PORTFOLIO
 
 #include <string>
+#include <map>
 #include <Wt/Dbo/Dbo>
 #include "../common/CommonUtils.h"
 
@@ -9,15 +10,31 @@ class Portfolio {
 	std::string user;
 	std::string code;
 	int quantity;
-	double totalcost;
+	int totalcost;
 	std::string status;
 	std::string msg;
 	err_code m_ec;
+
+	std::map<std::string, int> getAllStocks(Wt::Dbo::Session& session) const;
 public:
 	Portfolio():user("guest"), code("Dummy"), quantity(0), totalcost(0){
 	}
 	Portfolio(const std::string& u);
 
+	Portfolio(const std::string& u, const std::string& c, int q, int t):user(u), code(c), quantity(q), totalcost(t) {
+	}
+	int getQty() const{
+		return quantity;
+	}
+	void setQty(int newQ){
+		quantity = newQ;
+	}
+	void setTotalCost(int newTC) {
+		totalcost = newTC;
+	}
+	int getTotalCost() const{
+		return totalcost;
+	}
 	template<class Action>
 	void persist(Action& a) {
 		Wt::Dbo::field(a, user, "username");
@@ -35,7 +52,7 @@ public:
 		return m_ec;
 	}
 };
-
+/*
 namespace Wt {
 	namespace Dbo {
 		template<>
@@ -46,5 +63,5 @@ namespace Wt {
 		};
 	}
 }
-
+*/
 #endif
